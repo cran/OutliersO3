@@ -1,0 +1,15 @@
+a64d6e0e7733de4cf036f1fbe28f0f5c *DESCRIPTION
+cdd97f6b4ca018a27a752d21142005e3 *NAMESPACE
+c2de2b73960044baf870645138fcf121 *NEWS
+787ec08b26c0867c6e7faebdd2505bc9 *R/O3a.R
+a56042a88a88708d01be9f4e0c3b69fe *R/O3plot.R
+58ab9a4b8ef02334fc5a199b17c959fd *R/sortO3.R
+d96055bcb8dc877aebee7462f776a47d *build/vignette.rds
+33273f0fbdef06ec60f577220c06659f *inst/doc/O3-vignette.R
+b5e6a3bdbb60988c731b5be847b3250c *inst/doc/O3-vignette.Rmd
+d09822979ae4bab965d5bee9f27a954c *inst/doc/O3-vignette.html
+4c9c6af58aeae14ca949bfef278cd04d *man/O3a.Rd
+286c7bce555b93eafdee71ea7534bbff *man/O3plot.Rd
+bc338aef27aa3f03d67f7ef2a016bb5c *man/OutliersO3.Rd
+93c92b1298a5ce2446e2dc0a830be4bc *man/sortO3.Rd
+b5e6a3bdbb60988c731b5be847b3250c *vignettes/O3-vignette.Rmd

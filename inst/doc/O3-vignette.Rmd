@@ -1,0 +1,91 @@
+---
+title: "Drawing O3 (Overview Of Outliers) plots"
+author: "Antony Unwin"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+     toc: true
+vignette: >
+  %\VignetteIndexEntry{Drawing O3 plots}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Introduction
+
+Outliers are a complicated business. It is difficult to define what they are and it is difficult to assess how they may affect analyses.  They can be errors, missclassifications or fascinating special cases.
+
+Univariate outliers are cases identified as outliers based on one variable. Multivariate outliers are cases identified based on several variables taken together. Datasets with many variables can give rise to a variety of different outliers depending on which combinations of variables (and which outlier identification methods) are used. An O3 plot shows which cases are identified as potential outliers for every combination of variables.
+
+
+## A first O3 plot
+
+Every O3 plot is drawn with a complementary parallel coordinate plot with outliers coloured red that are identified by any of the variable combinations.
+
+```{r fig.width=7, fig.height=8, fig.align='center'}
+library(OutliersO3)
+data(Election2005, package="mbgraphic")
+ouF <- Election2005[, c(6, 10, 17, 28)]
+O3s <- O3plot(ouF, mm="HDo", Alphas=0.05, Coefs=6)
+library(gridExtra)
+grid.arrange(O3s$gO3, O3s$gpcp, ncol=1)
+```
+
+Fig 1: An O3 plot (above) and a parallel coordinate plot with outliers highlighted in red (below).  The HDoutliers algorithm was used and the dataset comprised four structural variables for German parliamentary constituencies.
+
+There is a row for each variable combination for which outliers were found and two blocks of columns.  Each row of the block on the left shows which variable combination defines that row.  As there are 4 variables, there are 4 columns, one for each variable, and a cell is coloured grey if that variable is part of the combination.   The combinations (the rows) are sorted by numbers of outliers found within numbers of variables in the combination, and blue dotted lines separate the combinations with different numbers of variables. The columns in the left block are sorted by how often the variables occur.  Combinations are only included if outliers are found with them.  A white boundary column separates this block from the block on the right that records the outliers found.  There is one column for each case that is found to be an outlier at least once and these columns are sorted by the numbers of times the cases are outliers.
+
+Ten of the 299 cases are found to be outliers for some variable combination or other. X84 is identified by 7 combinations, always when population density is in the combination (except for the combination of all four variables, when no outliers are found).  Only one outlying case, X91, is not an outlier on any of the variables on their own.
+
+Setting Alpha to 0.05 is not particularly stringent.  The next figure compares outliers identified at different levels of Alpha.
+
+
+## Comparing different Alpha levels
+
+```{r fig.width=7, fig.height=8, fig.align='center'}
+O3s2 <- O3plot(ouF, mm="HDo", Alphas=c(0.1, 0.05, 0.01), Coefs=c(3, 6, 10))
+grid.arrange(O3s2$gO3, O3s2$gpcp, ncol=1)
+```
+
+Fig 2: An O3 plot for the same dataset drawn for different alpha levels (above) and a parallel coordinate plot (below) with outliers highlighted in red that are identified by at least one variable combination for any level.  The HDoutliers algorithm was used.
+
+More cases are now identified as possible outliers and the variable car density finds many at a level of 0.1, but none at lower levels.
+
+
+## Comparing two methods
+
+Different outlier methods may identify different sets of outliers and the next figure compares methods HDoutliers and FastPCS.  For any method like FastPCS that does not identify univariate outliers, boxplot limits are used for single variables defined by the parameter Coefs.
+
+```{r fig.width=7, fig.height=8, fig.align='center'}
+O3s3 <- O3plot(ouF, mm=c("HDo", "PCS"), Alphas=0.05, Coefs=6)
+grid.arrange(O3s3$gO3, O3s3$gpcp, ncol=1)
+```
+
+Fig 3: An O3 plot displaying outliers found by either or both of methods HDoutliers and FastPCS (above) and the complementary parallel coordinate plot.
+
+FastPCS finds many more outliers than HDoutliers  A few outliers found by HDoutliers are not identified as outliers by FastPCS for the same combinations of variables, but mostly for other combinations.
+
+
+## Using five methods simultaneously
+
+The \pkg{OutliersO3} package offers the choice of 5 outlier identification methods and all 5 can be compared in one plot.  The number of methods identifying an outlying case for a particular variable combination is represented by shading and any case found by all 5 is highlighted in red.
+
+It is useful to know how many outliers have been found before drawing the displays---there can be very many.
+```{r message=FALSE}
+O3s5 <- O3plot(ouF, mm=c("HDo", "PCS", "BAC", "adjOut", "DDC"), Alphas=0.05, Coefs=6)
+cx <- data.frame(outlier_method=names(O3s5$nrout), number_of_outliers=O3s5$nrout)
+knitr::kable(cx, row.names=FALSE)
+```
+
+If you still want to plot for these methods with these parameters, then this is what you will get:
+
+```{r fig.width=7, fig.height=8, fig.align='center'}
+grid.arrange(O3s5$gO3, O3s5$gpcp, ncol=1)
+```
+
+Fig 4: An O3 plot displaying outliers found by any of the 5 methods and the parallel coordinate plot with cases identified by any method for any variable combination highlighted in red.
+
+Although all methods identify at least some potential outliers, no case is identified by all for the same combination of variables.  mvBACON and FastPCS identify far too many cases, primarily for particular variable combinations.  It is interesting to note that there is still one variable combination (car ownership on its own) for which no outliers are identified by any method.
+
+The large number of potential outliers identified makes a mess of the labelling, as it did to a lesser extent in the previous plot.
