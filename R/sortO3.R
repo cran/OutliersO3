@@ -7,8 +7,12 @@
 sortO3 <- function(z1, n1=n1, nz=nz) {
     nc <- nrow(z1)
     n3 <- n1+2
-    z1 <- z1 %>% mutate(ID=seq(1:nc), sumV=rowSums(z1[ ,1:n1]),
-          sumR=ifelse((nz*nc)>1, rowSums(z1[ ,(n1+2):(nz+n1+1)]), z1[ ,n1+2]))
+    z1 <- z1 %>% mutate(ID=seq(1:nc), sumV=rowSums(z1[ ,1:n1]))
+    if (nz > 1) {
+       z1$sumR <- rowSums(z1[ ,(n1+2):(nz+n1+1)])
+       } else {
+       z1$sumR <- z1[ ,n1+2]
+       }
     z1p <- z1 %>% gather(sN, sB, -ID, -sumV, -sumR)
     z1p <- z1p %>% mutate(pID=factor(ID))
     z1p <- z1p %>% mutate(psN=factor(sN))

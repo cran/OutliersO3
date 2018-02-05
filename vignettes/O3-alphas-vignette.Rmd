@@ -1,0 +1,78 @@
+---
+title: "Different outlier tolerance levels for different O3 plots"
+author: "Antony Unwin"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+     toc: true
+vignette: >
+  %\VignetteIndexEntry{Different outliers tolerance levels}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Introduction
+The outlier methods used in the *OutliersO3* package identify outliers in different ways.  The common key parameter is usually called `alpha` (`alpha.cutoff` for `adjOutlyingness`, `tolProb` for `DetectDeviatingCells`), although for some methods (`FastPCS`, `DetectDeviatingCells`, `covMcd`) it is input as `(1-alpha)`. *OutliersO3* uses `tol` arguments, short for tolerance level, to put all these on an equivalent footing.
+The alphas (or (1-alpha)'s) are not directly comparable and so they should be set individually when drawing O3 plots to compare results.  It is up to users to decide which value should be used for each method. 
+
+
+## Using individual tolerance levels for different methods
+Figure 1 shows an example using four variables of German demographic data.  Applying the default tolerance level values from the help pages of the individual methods, far too many outliers were generated with some of the methods.  A little experimentation with the tolerance levels was carried out to reduce these numbers to more manageable ones.  (This new set of tolerance levels is the current default in O3prep.)
+
+```{r fig.width=6, fig.height=4, fig.align='center'}
+library(OutliersO3)
+data(Election2005, package="mbgraphic")
+data <- Election2005[, c(6, 10, 17, 28)]
+O3d <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"), tolHDo=0.05, tolPCS=0.5, tolBAC=0.95, toladj=0.25, tolDDC=0.01, tolMCD=0.5)
+O3d1 <- O3plotM(O3d)
+O3d1$nOut
+O3p <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"))
+O3p1 <- O3plotM(O3p)
+O3p1$nOut
+O3p1$gO3
+```
+Fig 1: An O3 plot displaying outliers found by any of the 6 methods using individually specified `tol` values.  Although at least 4 potential outliers were identified by each method, there was no outlier found by all six methods for any combination of variables. 
+
+The constituency labelled X84 is the Berlin-Friedrichshain -etc one mentioned in the first vignette.  There are 3 variable combinations where it is identified as an outlier by five of the methods.  Inspecting the table of outlier cases by variable combinations and methods, `outsTable`, reveals that the `DetectDeviatingCells method` is the odd man out.  In fact, it does not really identify any outliers at all, as the 4 ascribed to it all come from the boxplot outlier identification rule that is used for methods which cannot identify outliers for single variables.
+
+Of course, since the methods are all different and have different goals, it should not be surprising that they find different outliers, although we might have expected that they all agree on the most extreme ones.  Perhaps the main surprise is that the differences are so great---at least for this dataset.
+
+## Analysing etymology data with different tolerance levels
+The etymology dataset from *languageR* includes 285 Dutch verbs with 13 attributes.  Excluding the four factors and three other attributes, potential outliers were identified using the six methods and the same individual tolerance levels as for the example shown in Figure 1.
+
+```{r }
+data(etymology, package="languageR")
+data <- etymology[, c(2, 4, 5, 10, 13, 14)]
+O3q <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"), tolHDo=0.01, tolPCS=0.005, tolBAC=0.005, toladj=0.1, tolDDC=0.01, tolMCD=0.000001)
+O3q1 <- O3plotM(O3q)
+O3q1$nOut
+```
+
+`HDoutliers` identified far too many outliers so the individual outlier output was inspected to find out for which combinations of variables this occurred.  (The variable combination labels are a binary coding in the original order of the variables in the dataset.)
+
+```{r include=FALSE}
+library(dplyr)
+```
+
+```{r }
+outHD <- O3q1$outsTable %>% filter(Method=="HDo") %>% group_by(Combination) %>% summarise(num=n()) %>% filter(num>5)
+knitr::kable(outHD, row.names=FALSE)
+```
+
+The problem clearly lies in the second attribute, MeanBigramFrequency, and not in the tolerance level set.  It was decided to ignore the one dimensional combinations by setting k1=2, and leave the tolerance level as it was.  Tightening the tolerance levels for the other two methods finding more than a few outliers (`FastPCS` and `DetectDeviatingCells`) and adding case names for labels led to Figure 2.
+
+```{r fig.width=7, fig.height=8, fig.align='center'}
+O3r <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"), k1=2, tolHDo=0.01, tolPCS=0.0025, tolBAC=0.005, toladj=0.1, tolDDC=0.005, tolMCD=0.000001)
+O3r1 <- O3plotM(O3r, caseNames=etymology$Verb)
+O3r1$nOut
+library(gridExtra)
+grid.arrange(O3r1$gO3, O3r1$gpcp, ncol=1, heights=c(2,1))
+```
+
+Fig 2: An O3 plot of the etymology dataset for combinations to 2 to 6 variables.  There is little agreement amongst the methods and no agreement anywhere for five or six methods together.  The parallel coordinate plot does suggest two pairs of potential outliers on single variables, but judging by the O3 plot they would not be identified as outliers in six dimensions.
+
+A full analysis would include a discussion of the verbs with an expert in Dutch linguistics.  Statistical methods can be used to identify cases of possible interest and O3 plots and parallel coordinate plots can help indicate why cases are outliers, but subject matter knowledge is essential.
+
+
+

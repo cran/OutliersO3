@@ -1,0 +1,47 @@
+---
+title: "Including results from other outlier identification methods in O3 plots"
+author: "Antony Unwin"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+     toc: true
+vignette: >
+  %\VignetteIndexEntry{Drawing O3 plots}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Introduction
+OutliersO3 includes access to six different methods available in R for identifying possible outliers.  If you want to use another outlier method (or use one of the available ones, but with some different parameters) to draw an O3 plot, this is what you have to do.
+
+## Using a single new method with up to 3 tolerance levels.
+Prepare a list called **outResults** made up of the following elements:  
+* __data__ the dataset used  
+* __nw__	 the number of variable combinations analysed (default assumes sum(choose(n1, 1:n1)), for n1=#variables)  
+* __mm__   name of the method used  
+* __tols__ set of t tolerance levels (t≤3)  
+* __outList__	a multi-level list with t x nw x 3 elements.  Each of the t lists is a list of nw lists  Each of the nw lists is a list of three: names of variables in the combination, indices of cases identified as potential outliers, outlier distances for every case.  
+
+**outResults** can then be input to the function O3plotT to draw the corresponding O3 plot.
+
+## Using one of more new methods and adding their results to results for methods in OutliersO3.
+
+Prepare a list called **outResults** made up of the following elements:  
+* __data__ the dataset used  
+* __nw__	 the number of variable combinations analysed (default assumes sum(choose(n1, 1:n1)), for n1=#variables)  
+* __mm__   names of the m methods used  
+* __tols__ set of individual tolerance levels, one for each method  
+* __outList__	a multi-level list with m x nw x 3 elements.  Each of the m = length(mm) lists is a list of nw lists  Each of the nw lists is a list of three: names of variables in the combination, indices of cases identified as potential outliers, outlier distances for every case.  
+
+If these results are to be added to results found by the function O3prep in the *OutliersO3* package, then the two outList lists can be combined using rlist::list.append.  
+e.g., if the lists are called __outList1__ and __outList2__ and __outList2__ has only two elements:
+```{r eval=FALSE}
+outList <- rlist::list.append(outList1, outList2[[1]], outList2[[2]])
+```
+__outResults__ is constructed as above and input to the function O3plotM to draw an O3 plot.  
+NB __outList1__ and __outList2__ have to use the same dataset and the same nw combinations. 
+
+## Tips for constructing an outResults list.  
+There are two issues: each outlier method has its own structure, parameters, and output, and outliers need to be identified for many different combinations of variables.  The O3a function in the OutliersO3 package shows how to run through the variable combinations and includes code for six different methods.  It is likely that you can use ideas from one of more of these to determine how your method could be coded.  
+The appropriate mapply R function used in the O3prep function can then be employed to produce the outList list element of an outResults list to be used as input for an O3plot function.
