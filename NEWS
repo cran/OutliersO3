@@ -1,3 +1,8 @@
+Outliers03 v0.5.4 (Release date: 2018-02-08)
+==============
+Corrected the index entries for the vignettes so that they are all different.
+
+
 Outliers03 v0.5.3 (Release date: 2018-02-06)
 ==============
 Relaxed the dependence on R from ≥ R 3.4.0 to ≥ R 3.3.0 to ensure that the package would run under r-oldrel-osx-x86_64 and thus pass all CRAN package checks.

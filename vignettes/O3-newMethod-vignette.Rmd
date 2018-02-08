@@ -6,7 +6,7 @@ output:
   rmarkdown::html_vignette:
      toc: true
 vignette: >
-  %\VignetteIndexEntry{Drawing O3 plots}
+  %\VignetteIndexEntry{Drawing O3 plots for other outlier methods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

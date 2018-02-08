@@ -6,7 +6,7 @@ output:
   rmarkdown::html_vignette:
      toc: true
 vignette: >
-  %\VignetteIndexEntry{Different outliers tolerance levels}
+  %\VignetteIndexEntry{Different outlier tolerance levels}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
