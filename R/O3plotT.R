@@ -5,8 +5,8 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("ID",
 
 # Main function--------------
 
-O3plotT <- function(outResults, caseNames=as.character(1:nrow(outResults$data)),
-                   O3control=O3plotColours()) {
+O3plotT <- function(outResults, caseNames=paste0("X", 1:nrow(outResults$data)),
+                   sortVars=TRUE, coltxtsize=14, O3control=O3plotColours()) {
 
 mx <- 1
 ouF <- outResults$data
@@ -54,42 +54,41 @@ outList <- outResults$outList
           Ds[, k, j] <- l1[[3*k]]
           }
         }
-        
+
 #Summarise the outlier indices array
       zs <- apply(zz, c(1,2), max)
       if (mxm == 1) {
         nOut <- nz
-        names(nOut) <- mm
+#        names(nOut) <- mm
         }
       if (mxm > 1) {
         zt <- apply(zz, c(2,3), sum)
         zt[zt>0] <- 1
         nOut <- colSums(zt)
-        names(nOut) <- tols
         }
+        names(nOut) <- tols
 
-
-#Add variable columns and gap column to matrix--------------
-    zv <- rep(0, nw*(n1 + 1))
-    dim(zv) <- c(nw, n1+1)
-    colnames(zv) <- c(names(ouF), "._______.")
+#Add variable columns and gap columns to matrix--------------
+    zv <- rep(0, nw*(n1 + 2))
+    dim(zv) <- c(nw, n1+2)
+    colnames(zv) <- c(names(ouF), "gap1", "gap2")
     for (k in 1:nw) {
       zv[k, l1[[3*k-2]]] <- 1/1000
-      zv[k, n1+1] <- 2/1000
+      zv[k, (n1+1):(n1+2)] <- 2/1000
     }
     colnames(zs) <- caseNames[l2a]
     z1 <- data.frame(cbind(zv, zs))
 
 # Remove combinations with no outliers--------------
     if (nz > 1) {
-    z1 <- z1[rowSums(z1[ , (n1+2):(n1+1+nz)]) > 0, ]
+    z1 <- z1[rowSums(z1[ , (n1+3):(n1+2+nz)]) > 0, ]
     } else {
       if (nz == 1)
-      z1 <- z1[z1[ , (n1+2)] > 0, ]
+      z1 <- z1[z1[ , (n1+3)] > 0, ]
     }
 
 # Sort and prepare----------------------------
-    z1p <- sortO3(z1, n1=n1, nz=nz)
+    z1p <- sortO3(z1, n1=n1, nz=nz, ouF, sortVars)
 
 # Plot------------------------------------------
 
@@ -108,29 +107,26 @@ outList <- outResults$outList
     z1p <- z1p %>% mutate(s1B = factor(sB, levels = c("0", "0.001", "0.002", "3",
       "4", "5", "3.01", "3.02", "6.03", "7", "14", "21", "28", "35", "42")))
     names(outCols) <- levels(z1p$s1B)
+    vc <- c(rep("black", n1), rep("white", 2), rep("black", nz))
 
     ga <- ggplot(z1p, aes(psNx, forcats::fct_rev(pID), group = s1B, fill = s1B)) +
       geom_tile(colour = "grey30") + labs(x = NULL, y = NULL) +
-      scale_fill_manual(name = "s1B", values = outCols) +
-      theme(plot.title = element_text(size = 18, hjust = 0.5),
-      legend.position = "none", panel.background = element_rect(fill = "white"),
-      axis.text.x = element_text(size=14, angle=45, hjust=0, vjust=0),
+      theme(legend.position = "bottom", panel.background = element_rect(fill = "white"),
+      axis.text.x = element_text(size=coltxtsize, angle=45, hjust=0, vjust=0, colour=vc),
       axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
       scale_x_discrete(position = "top") +
-      geom_hline(yintercept = tw, lty = 3, colour = "blue")
+      geom_hline(yintercept = tw, lty = 3, colour = "blue", size=0.75)
     if (mxm == 3) {
-      gO3 <- ga  + ggtitle(paste("O3 plot of outliers found by ", mm,
-        "\n(",outCols[4], " for ", tols[1], " outliers, ", outCols[5], " for ", tols[2],
-        "\n outliers, ", outCols[6], " for ", tols[3], " outliers)", sep=""))
+      gO3 <- ga + scale_fill_manual(name = paste0("Outliers identified by ", mm , " at tolerances"), values = outCols,
+      breaks=c("3", "4", "5"), labels=c(tols[1], tols[2], tols[3]))
     } else {
       if (mxm == 2) {
-      gO3 <- ga  + ggtitle(paste("O3 plot of outliers found by ", mm, "\n(",outCols[5],
-       " for ", tols[1], " outliers,\n", outCols[6], " for ",
-        tols[2], " outliers)", sep=""))
+      gO3 <- ga + scale_fill_manual(name = paste0("Outliers identified by ", mm , " at tolerances"), values = outCols,
+      breaks=c("4", "5"), labels=c(tols[1], tols[2]))
       } else {
         if (mxm == 1) {
-        gO3 <- ga  + ggtitle(paste("O3 plot of outliers found by ", mm,
-          "\n(",outCols[6], " for ", tols[1], " outliers)", sep=""))
+        gO3 <- ga  + scale_fill_manual(name = paste0("Outliers identified by ", mm , " at tolerance"), values = outCols,
+        breaks=c("5"), labels=c(tols[1]))
         }
        }
     }
@@ -148,8 +144,8 @@ outList <- outResults$outList
       theme(plot.title = element_text(size = 18, hjust = 0.5),
       legend.position = "none", axis.ticks.y = element_blank(),
       axis.text.y = element_blank())
-    gpcp <- gp + ggtitle(paste("Cases ever found to be outliers \n by method",
-        mm, "\n for tol=", tols[1]))
+    gpcp <- gp + ggtitle(paste("Cases ever found to be outliers by ",
+        mm, " for tol=", tols[1]))
 
 
 # Create dataset of outliers by case, combination and tol--------------
@@ -162,17 +158,24 @@ outList <- outResults$outList
         gg[gg>0] <- 1
         gg <- unite(gg, "Combination", c(1:n1), sep="")
         rownames(zz) <- paste0("c", gg$Combination)
+        colnames(zz) <- caseNames[l2a]
         dimnames(zz)[[3]] <- names(nOut)
         zz[zz>0] <- 1
         outs <- memisc::to.data.frame(zz, as.vars = 0, name = "Outlier")
-        colnames(outs)[1:3] <- c("Combination", "Case", "tol")
+        colnames(outs)[1:3] <- c("Combination", "Name", "tol")
         outs <- outs[outs$Outlier > 0, 1:3]
+        Cases <- data.frame(caseNames, Case=1:nrow(outResults$data))
+        outy <- merge(outs, Cases, by.x = "Name", by.y = "caseNames")
 
 # Draw a pcp of method distances (scores) with lowest tol outliers highlighted unless method is HDo
-        dimnames(Ds)[[2]] <- rownames(zz)
+        if(nw > 1) {
+          dimnames(Ds)[[2]] <- rownames(zz)
+        } else {
+          dimnames(Ds)[[2]] <- list(rownames(zz))
+        }
         dimnames(Ds)[[3]] <- paste0("T", tols)
-        if(mm=="HDo") {
-           return(list(nOut = nOut, gpcp = gpcp, gO3 = gO3, outsTable = outs, Ds = Ds)) 
+        if(mm=="HDo"|nw == 1) {
+           return(list(nOut = nOut, gpcp = gpcp, gO3 = gO3, outsTable = outy, Ds = Ds))
         } else {
         Dx <- data.frame(Ds[ , , mxm])
         Dx$oh <- rep(0, n2)
@@ -186,7 +189,7 @@ outList <- outResults$outList
           axis.text.y = element_blank())
         gCombs <- gd  + ggtitle(paste("Scores for each combination using\n method", mm, "with outliers highlighted"))
 
-    return(list(nOut = nOut, gpcp = gpcp, gO3 = gO3, gCombs = gCombs, outsTable = outs, Ds = Ds))
+    return(list(nOut = nOut, gpcp = gpcp, gO3 = gO3, gCombs = gCombs, outsTable = outy, Ds = Ds))
     }
   }
 }

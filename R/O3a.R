@@ -2,12 +2,6 @@
 
 O3a <- function(ouF, k1=k1, K=K, mm=mm, tol=tol, boxplotLimit=boxplotLimit, n1=n1, n2=n2) {
 
-# This function is required to suppress unnecessary output
-DetectDeviantCells <- function(...) {
-    utils::capture.output(x <- cellWise::DetectDeviatingCells(...))
-    x
-  }
-  
 # Choice of method----------------------------
   if (mm == "HDo") {
     xloop <- function(k) {
@@ -15,7 +9,7 @@ DetectDeviantCells <- function(...) {
         list(variables = noquote(vars),
         outlierIndices = as.vector(as.integer(HDoutliers::HDoutliers(ouF[ , vars],
         alpha = tol))),
-        outDist = rep(NA, n2)) 
+        outDist = rep(NA, n2))
         }, simplify = FALSE)
       }
     }
@@ -25,14 +19,14 @@ DetectDeviantCells <- function(...) {
         outV = FastPCS::FastPCS(ouF[ , vars], alpha = 1-tol)
         list(variables = noquote(vars),
         outlierIndices = setdiff(1:n2, outV$best),
-        outDist = outV$distance) 
+        outDist = outV$distance)
         }, simplify = FALSE)
       }
     }
   if (mm == "BAC") {
     xloop <- function(k) {
       utils::combn(names(ouF), k, FUN = function(vars) {
-        outV = robustX::mvBACON(ouF[ , vars],
+        outV = robustX::mvBACON(data.frame(ouF[ , vars]),
         alpha = tol, verbose = FALSE, allowSingular = TRUE)
         list(variables = noquote(vars),
         outlierIndices = as.vector(which(outV$subset == FALSE)),
@@ -53,8 +47,8 @@ DetectDeviantCells <- function(...) {
  if (mm == "DDC") {
     xloop <- function(k) {
       utils::combn(names(ouF), k, FUN = function(vars) {
-        outV = DetectDeviantCells(ouF[ , vars],
-                    DDCpars = list(tolProb = 1-tol))
+        outV = cellWise::DetectDeviatingCells(ouF[ , vars],
+                    DDCpars = list(tolProb = 1-tol, silent = TRUE))
         list(variables = noquote(vars),
           outlierIndices = outV$indrows,
           outDist = outV$Ti)
@@ -65,12 +59,32 @@ if (mm == "MCD") {
     xloop <- function(k) {
       utils::combn(names(ouF), k, FUN = function(vars) {
         outV = robustbase::covMcd(ouF[ , vars], alpha = 0.9)
+        if (k==1) {
+        mu1 <- as.numeric(outV$center)
+        var1 <- as.numeric(outV$cov)
+        outDist <- (ouF[ , vars]- mu1)^2/var1
+        } else {
+        outDist <- outV$mah
+        }
         list(variables = noquote(vars),
-           outlierIndices = as.vector(which(outV$mah > qchisq(1-tol, n1))),
-           outDist = outV$mah)
+           outlierIndices = as.vector(which(outDist > qchisq(1-tol, k))),
+           outDist)
         }, simplify = FALSE)
       }
     }
+
+# SHOULDN'T chisq df always be k?
+# WHY didn't I use outV$cutoff or just outV$flagX??  Because I want to choose tol
+# if (mm == "adjOutD") {
+# xloop <- function(k) {
+#   utils::combn(names(ouF), k, FUN = function(vars) {
+#     outV = mrfDepth::adjOutl(ouF[ , vars])
+#     list(variables = noquote(vars),
+#          outlierIndices = as.vector(which(outV$outlyingnessX > (qchisq(1-tol, n1)**0.5)*median(outV$outlyingnessX))),
+#          outDist = outV$outlyingnessX)
+#     }, simplify = FALSE)
+#   }
+#  }
 
 # if (mm == "sHDo") {
 #    xloop <- function(k) {
@@ -78,7 +92,7 @@ if (mm == "MCD") {
 #        list(variables = noquote(vars),
 #        outlierIndices = as.vector(as.integer(stray::find_HDoutliers(ouF[ , vars],
 #        alpha = tol))),
-#        outDist = rep(NA, n2)) 
+#        outDist = rep(NA, n2))
 #        }, simplify = FALSE)
 #      }
 #    }
@@ -94,7 +108,7 @@ if (mm == "MCD") {
 #        }, simplify = FALSE)
 #      }
 #    }
-       
+
 # Method for 1-d outliers--------------
   out1d <- function(j) {
     outx <- boxplot.stats(ouF[ ,j], coef = boxplotLimit, do.conf = FALSE)$out
@@ -103,8 +117,7 @@ if (mm == "MCD") {
     outDist = abs((ouF[ ,j]-median(ouF[ ,j]))/(IQR(ouF[ ,j]))))
     }
 
-#  if (k1 < 2 & !(mm %in% c("HDo", "adjOut", "sHDo"))) {
-  if (k1 < 2 & !(mm %in% c("HDo", "adjOut"))) {
+  if (k1 < 2 & mm %in% c("PCS", "DDC")) {
     #Find 1-d outliers
     suspectsA <- lapply(1:n1, out1d)
     #Find higher-d outliers
@@ -116,8 +129,8 @@ if (mm == "MCD") {
       suspects <- c(suspectsA, unlist(suspectsB, recursive = FALSE))
       }
     }
-#  if (mm %in% c("HDo", "adjOut", "sHDo")| k1 > 1) {
-  if (mm %in% c("HDo", "adjOut")| k1 > 1) {
+
+  if (mm %in% c("HDo", "BAC", "adjOut", "MCD")| k1 > 1) {
     suspects <- lapply(k1:K, xloop)
     suspects <- unlist(suspects, recursive = FALSE)
     }

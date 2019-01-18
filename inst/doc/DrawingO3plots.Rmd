@@ -32,7 +32,7 @@ O3s1$gO3
 
 Fig 1: An O3 plot using the HDoutliers algorithm for a dataset comprising four structural variables for German parliamentary constituencies.
 
-There is a row for each variable combination for which outliers were found and two blocks of columns.  Each row of the block on the left shows which variable combination defines that row.  As there are 4 variables, there are 4 columns, one for each variable, and a cell is coloured grey if that variable is part of the combination.   The combinations (the rows) are sorted by numbers of outliers found within numbers of variables in the combination, and blue dotted lines separate the combinations with different numbers of variables. The columns in the left block are sorted by how often the variables occur.  Combinations are only included if outliers are found with them.  A white boundary column separates this block from the block on the right that records the outliers found.  There is one column for each case that is found to be an outlier at least once and these columns are sorted by the numbers of times the cases are outliers.
+There is a row for each variable combination for which outliers were found and two blocks of columns.  Each row of the block on the left shows which variable combination defines that row.  As there are 4 variables, there are 4 columns, one for each variable, and a cell is coloured grey if that variable is part of the combination.   The combinations (the rows) are sorted by numbers of outliers found within numbers of variables in the combination, and blue dotted lines separate the combinations with different numbers of variables. The columns in the left block are sorted by how often the variables occur.  Combinations are only included if outliers are found with them.  Two white  columns separate this block from the block on the right that records the outliers found.  There is one column for each case that is found to be an outlier at least once and these columns are sorted by the numbers of times the cases are outliers.
 
 German words and names can be long and that is why the plot labels take up so much space.  The full name of the constituency most often found to be an outlier is Berlin-Friedrichshain - Kreuzberg - Prenzlauer Berg Ost.  Without a recognised abbreviation it can be better to use dataset row numbers, the default labelling, as is done in the other figures, and use that to find the name in the dataset.
 
@@ -60,7 +60,7 @@ For every O3 plot there is a complementary parallel coordinate plot with outlier
 
 ## Comparing two methods
 
-Different outlier methods may identify different sets of outliers and the next figure compares methods HDoutliers and FastPCS.  For any method like FastPCS that does not identify univariate outliers, boxplot limits are used for single variables defined by the argument boxplotLimits.
+Different outlier methods may identify different sets of outliers and the next figure compares methods HDoutliers and FastPCS, using the package's default tolerance levels of $0.05$ for HDoutliers and $0.01$ for FastPCS.  For any method like FastPCS that does not identify univariate outliers, boxplot limits are used for single variables defined by the argument boxplotLimits.
 
 ```{r fig.width=7, fig.height=8, fig.align='center'}
 O3m <- O3prep(data, method=c("HDo", "PCS"))
@@ -75,17 +75,17 @@ FastPCS finds many more outliers than HDoutliers  A few outliers found by HDoutl
 
 ## Using six methods simultaneously
 
-The \pkg{OutliersO3} package offers the choice of 6 outlier identification methods and all 6 can be compared in one plot.  If all 6 methods identify an outlying case for a particular variable combination, it is shown in red.  If five methods agree, the cell is coloured orange and if X agree (X≤4) then slategrayX shading is used.
+The \pkg{OutliersO3} package offers the choice of 6 outlier identification methods and all 6 can be compared in one plot.  If all 6 methods identify an outlying case for a particular variable combination, it is shown in red.  If five methods agree, the cell is coloured orange and if X agree (X≤4) then slategrayX shading is used.  The tolerance levels used for each method in this plot are the defaults ones set in the package.
 
 It is useful to know how many outliers have been found before drawing the displays---there can be very many--- and so a table of the O3plot output, nOut (number of outliers), is useful.
 ```{r message=FALSE}
-O3y <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"), tols=0.05, boxplotLimits=6)
+O3y <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"))
 O3y1 <- O3plotM(O3y)
 cx <- data.frame(outlier_method=names(O3y1$nOut), number_of_outliers=O3y1$nOut)
 knitr::kable(cx, row.names=FALSE)
 ```
 
-If you still want to plot for these methods with these arguments, then this is what you will get:
+Drawing the plot and the complementary parallel coordinate plot gives:
 
 ```{r fig.width=7, fig.height=8, fig.align='center'}
 grid.arrange(O3y1$gO3, O3y1$gpcp, ncol=1)

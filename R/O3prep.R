@@ -5,7 +5,8 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("ID",
 
 # Main function--------------
 
-O3prep <- function(data, k1=1, K=ncol(data), method="HDo", tols=0.05, boxplotLimits=6,
+O3prep <- function(data, k1=1, K=ncol(data), method="HDo",
+            tols=0.05, boxplotLimits=c(6, 10, 12),
      tolHDo=0.05, tolPCS=0.01, tolBAC=0.001, toladj=0.05, tolDDC=0.01, tolMCD=0.000001) {
   ouF <- data.frame(data) #in case the dataset is a tibble
 
@@ -19,7 +20,7 @@ O3prep <- function(data, k1=1, K=ncol(data), method="HDo", tols=0.05, boxplotLim
 # Check for missings in the dataset
   varna <- apply(ouF, 2, function(x) any(is.na(x)))
   if (sum(varna) > 0) {
-      cat(colnames(ouF)[varna])
+      cat(colnames(ouF)[varna], "\n")
       stop("These variable(s) have missing values and ",
       "(most) outlier methods cannot deal with them.", call.=FALSE)
     }
@@ -28,7 +29,7 @@ O3prep <- function(data, k1=1, K=ncol(data), method="HDo", tols=0.05, boxplotLim
   n1 <- ncol(ouF)
   varnum <- sapply(ouF, is.numeric)
   if (sum(varnum) < n1) {
-    cat(colnames(ouF)[!(varnum)])
+    cat(colnames(ouF)[!(varnum)], "\n")
     stop("These variable(s) are not numeric.  (Most) outlier",
     "methods cannot deal with non-numeric variables.", call.=FALSE)
     }
@@ -49,8 +50,9 @@ O3prep <- function(data, k1=1, K=ncol(data), method="HDo", tols=0.05, boxplotLim
   stopifnot(k1 > 0, k1 <= K)
   stopifnot(min(tols) > 0, max(tols) < 1)
   stopifnot(min(boxplotLimits) > 0)
-  stopifnot(length(tols) == length(boxplotLimits) & length(tols) <= 3)
-  stopifnot(length(unique(tols)) == length(unique(boxplotLimits)))
+  stopifnot(length(tols) <= length(boxplotLimits) & length(tols) <= 3)
+# stopifnot(length(tols) <= 3)
+# stopifnot(length(unique(tols)) == length(unique(boxplotLimits)))
   ua <- length(tols)
 
   stopifnot(tolHDo >= 0, tolHDo < 1)
@@ -76,7 +78,7 @@ O3prep <- function(data, k1=1, K=ncol(data), method="HDo", tols=0.05, boxplotLim
       k1=k1, boxplotLimit=boxplotLimit, n1=n1, n2=n2))
       return(list(data = ouF, nw = nw, mm = mm, tols = tols, outList = outList))
       } else {
-      outList <- mapply(O3a, tols, boxplotLimits, MoreArgs=list(ouF=ouF, K=K,
+      outList <- mapply(O3a, tols, boxplotLimits[1:length(tols)], MoreArgs=list(ouF=ouF, K=K,
       k1=k1, mm=mm, n1=n1, n2=n2))
     return(list(data = ouF, nw = nw, mm = mm, tols = tols, outList = outList))
     }

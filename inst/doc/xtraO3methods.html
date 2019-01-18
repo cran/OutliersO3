@@ -12,14 +12,14 @@
 
 <meta name="author" content="Antony Unwin" />
 
-<meta name="date" content="2018-02-08" />
+<meta name="date" content="2019-01-18" />
 
 <title>Including results from other outlier identification methods in O3 plots</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -55,7 +55,29 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -70,7 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Including results from other outlier identification methods in O3 plots</h1>
 <h4 class="author"><em>Antony Unwin</em></h4>
-<h4 class="date"><em>2018-02-08</em></h4>
+<h4 class="date"><em>2019-01-18</em></h4>
 
 
 <div id="TOC">
@@ -95,6 +117,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 * <strong>tols</strong> set of t tolerance levels (t≤3)<br />
 * <strong>outList</strong> a multi-level list with t x nw x 3 elements. Each of the t lists is a list of nw lists Each of the nw lists is a list of three: names of variables in the combination, indices of cases identified as potential outliers, outlier distances for every case.</p>
 <p><strong>outResults</strong> can then be input to the function O3plotT to draw the corresponding O3 plot.</p>
+<p>(Note that if your method does not work for one dimension, like, for instance, FastPCS, you should add a univariate approach. OutliersO3 uses boxplot limits in that situation.)</p>
 </div>
 <div id="using-one-of-more-new-methods-and-adding-their-results-to-results-for-methods-in-outlierso3." class="section level2">
 <h2>Using one of more new methods and adding their results to results for methods in OutliersO3.</h2>

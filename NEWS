@@ -1,3 +1,20 @@
+Outliers03 v0.6 (Release date: 2019-01-21)
+==============
+(Thanks to anonymous referees and not-so-anonymous JCGS editors for suggesting some of these changes.)
+
+Use mvBacon and covMcd for their respective 1-d outliers and not boxplot limits.
+
+Changed the chi-square degrees of freedom used in setting thresholds for covMcd to number of variables in subspace from number of variables in dataset.
+
+Added legends to O3 plots and no longer include plot titles.
+
+There are now two white columns separating the left and right blocks of O3 plots.
+
+Added the options sortVars (whether variables in an O3 plot are sorted or not) and coltxtsize (text size of column names) to O3plotT and O3plotM.
+
+Simplified entry for the boxplotLimits parameter vector.
+
+
 Outliers03 v0.5.4 (Release date: 2018-02-08)
 ==============
 Corrected the index entries for the vignettes so that they are all different.

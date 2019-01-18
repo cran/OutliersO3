@@ -18,7 +18,7 @@ O3m1 <- O3plotM(O3m)
 grid.arrange(O3m1$gO3, O3m1$gpcp, ncol=1)
 
 ## ----message=FALSE-------------------------------------------------------
-O3y <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"), tols=0.05, boxplotLimits=6)
+O3y <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"))
 O3y1 <- O3plotM(O3y)
 cx <- data.frame(outlier_method=names(O3y1$nOut), number_of_outliers=O3y1$nOut)
 knitr::kable(cx, row.names=FALSE)

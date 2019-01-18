@@ -8,8 +8,8 @@ Draws an Overview of Outliers (O3) plot for one method and parallel coordinate p
 Function for drawing Overview of Outliers (O3) plots for one method and up to 3 tolerance levels and for drawing supporting parallel coordinate plots.
 }
 \usage{
-O3plotT(outResults, caseNames=as.character(1:nrow(outResults$data)),
- O3control=O3plotColours())
+O3plotT(outResults, caseNames=paste0("X", 1:nrow(outResults$data)),
+ sortVars=TRUE, coltxtsize=14, O3control=O3plotColours())
 }
 \arguments{
   \item{outResults}{
@@ -18,7 +18,13 @@ a list for each tolerance level, and within that for each variable combination, 
   \item{caseNames}{
 the ID variable used to identify the cases in an O3 plot, the default is the rownames from the dataset (so that they will then just be X7, X11, etc.)
 }
-  \item{O3control}{	
+  \item{sortVars}{
+sort the variable columns by how often the variables occur in combinations, otherwise keep the variable order in the dataset
+}
+  \item{coltxtsize}{
+set the size of text for column names in O3 plots (useful if there are so many columns that names overlap)
+}
+  \item{O3control}{
 A list of colours for O3 plots. If omitted, \code{\link{O3plotColours}} gives the defaults.
 }
 }

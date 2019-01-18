@@ -8,8 +8,8 @@ Draws an Overview of Outliers (O3) plot for more than one method and parallel co
 Function for drawing Overview of Outliers (O3) plots for comparing outlier methods and for drawing supporting parallel coordinate plots.
 }
 \usage{
-O3plotM(outResults, caseNames=as.character(1:nrow(outResults$data)),
- O3control=O3plotColours())
+O3plotM(outResults, caseNames=paste0("X", 1:nrow(outResults$data)),
+ sortVars=TRUE, coltxtsize=14, O3control=O3plotColours())
 }
 \arguments{
   \item{outResults}{
@@ -18,12 +18,18 @@ a list for each method, and within that for each variable combination, of the va
   \item{caseNames}{
 the ID variable used to identify the cases in an O3 plot, the default is the rownames from the dataset (so that they will then just be X7, X11, etc.)
 }
+  \item{sortVars}{
+sort the variable columns by how often the variables occur in combinations, otherwise keep the variable order in the dataset
+}
+  \item{coltxtsize}{
+set the size of text for column names in O3 plots (useful if there are so many columns that names overlap)
+}
   \item{O3control}{	
 A list of colours for O3 plots. If omitted, \code{\link{O3plotColours}} gives the defaults.
 }
 }
 \details{
-This function takes the output from \code{\link{O3prep}} and draws an O3 plot.  If there are only two methods, then the default colours are red if both methods identify the case as an outlier for a variable combination and blue or green is only one method does.  With more than two methods the default colours are red if all methods identify the outlier, orange if all but one method do, and shades of slategray otherwise.
+This function takes the output from \code{\link{O3prep}} and draws an O3 plot.  If there are only two methods, then the default colours are red if both methods identify the case as an outlier for a variable combination and blue or green if only one method does.  With more than two methods the default colours are red if all methods identify the outlier, orange if all but one method do, and shades of slategray otherwise.
 
 The two parallel coordinate plots, one using the raw data and one using outlier distances, are examples of what can be done to explore the results in more detail.  If you want these plots with other highlighting then you can use outsTable with either the dataset or the Cs array to draw them using \code{\link[GGally]{ggparcoord}} from \pkg{GGally} or whatever graphics tool you prefer.
 
@@ -40,7 +46,7 @@ a parallel coordinate plot of the dataset with cases ever found to be outliers c
 an O3 plot
 }
   \item{gO3x}{
-an O3 plot for three or more methods in which outliers identified by only one combination for a case are ignored.
+an O3 plot for three or more methods in which outliers identified by only one method for a variable combination are ignored.
 }
   \item{gMethods}{
 a parallel coordinate plot of the outlier distances calculated by each method for the full dataset with cases ever found to be outliers coloured red

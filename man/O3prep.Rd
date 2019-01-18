@@ -8,7 +8,7 @@ Identify outliers for different combinations of variables
 Check the dataset and parameters prior to analysis.  Identify outliers for the variable combinations and methods/tolerance levels specified.  Prepare input for the two plotting functions \code{O3plotT} and \code{O3plotM}.
 }
 \usage{
-O3prep(data, k1=1, K=ncol(data), method="HDo", tols=0.05, boxplotLimits=6,
+O3prep(data, k1=1, K=ncol(data), method="HDo", tols=0.05, boxplotLimits=c(6, 10, 12),
        tolHDo=0.05, tolPCS=0.01, tolBAC=0.001, toladj=0.05, tolDDC=0.01, tolMCD=0.000001)
 }
 \arguments{
@@ -25,10 +25,10 @@ highest number of variables in a combination
 method(s) used for identifying outliers (up to six can be used)
 }
   \item{tols}{
-outlier tolerance level(s) (up to three can be used if only one method is specified, otherwise just one).  For consistent use of the argument, it is transformed for some of the methods.  See details below of how the argument is applied for each approach.  
+outlier tolerance level(s) when only one method is specified, up to three can be used.  For consistent use of the argument, it is transformed for some of the methods.  See details below of how the argument is applied for each approach.  
 }
   \item{boxplotLimits}{
-boxplot limit(s) used if a method does not apply for a single variable (there should be the same number of boxplotLimits as tols)
+up to three boxplot limits are used, matching the number of tolerance levels, if a method does not apply for a single variable.
 }
   \item{tolHDo}{
 an individual outlier tolerance level for the HDoutliers method.  The default in \pkg{HDoutliers}, alpha, is 0.05.
@@ -60,7 +60,7 @@ If only one method is specified, then up to three tolerance levels (tols) and th
 
 \code{tol} is the argument determining outlyingness and should be set low, as in \command{HDoutliers} and \command{mvBACON}, where it is called alpha, and in \command{covMcd}.  For the other methods \code{(1-tol)} is used.  In \command{DectectDeviatingCells} the argument is called tolProb. Using the same tolerance level for all methods does not make them directly comparable, which is why it is recommended to set them individually when drawing a comparative O3 plot.  The defaults suggested on the methods' help pages mostly found too many outliers and so other defaults have been set.  Users need to decide for themselves, possibly dependent on the dataset they are analysing.
 
-Methods "HDo" and "adjOut", and "MCD" can analyse single variables.  For the other methods boxplot limits are used for single variables and any case > (Q3 + boxplotLimit*IQR) or < (Q1 - boxplotLimit*IQR) is classed an outlier, where \code{boxplotLimit} is the limit specified.
+Methods "HDo", "mvBACON", "adjOut", and "MCD" can analyse single variables.  For the other methods boxplot limits are used for single variables and any case > (Q3 + boxplotLimit*IQR) or < (Q1 - boxplotLimit*IQR) is classed an outlier, where \code{boxplotLimit} is the limit specified.
 }
 \value{
   \item{data}{

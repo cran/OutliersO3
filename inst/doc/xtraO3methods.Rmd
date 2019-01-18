@@ -25,6 +25,8 @@ Prepare a list called **outResults** made up of the following elements:
 
 **outResults** can then be input to the function O3plotT to draw the corresponding O3 plot.
 
+(Note that if your method does not work for one dimension, like, for instance, FastPCS, you should add a univariate approach.  OutliersO3 uses boxplot limits in that situation.)
+
 ## Using one of more new methods and adding their results to results for methods in OutliersO3.
 
 Prepare a list called **outResults** made up of the following elements:  
