@@ -1,3 +1,7 @@
+Outliers03 v0.6.1 (Release date: 2019-02-27)
+==============
+The authors of the package cellWise have renamed their function DetectDeviatingCells DDC and this required a minor code change in OutliersO3 and amendments to help files.
+
 Outliers03 v0.6 (Release date: 2019-01-21)
 ==============
 (Thanks to anonymous referees and not-so-anonymous JCGS editors for suggesting some of these changes.)

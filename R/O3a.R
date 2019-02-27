@@ -47,7 +47,7 @@ O3a <- function(ouF, k1=k1, K=K, mm=mm, tol=tol, boxplotLimit=boxplotLimit, n1=n
  if (mm == "DDC") {
     xloop <- function(k) {
       utils::combn(names(ouF), k, FUN = function(vars) {
-        outV = cellWise::DetectDeviatingCells(ouF[ , vars],
+        outV = cellWise::DDC(ouF[ , vars],
                     DDCpars = list(tolProb = 1-tol, silent = TRUE))
         list(variables = noquote(vars),
           outlierIndices = outV$indrows,

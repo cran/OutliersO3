@@ -13,7 +13,7 @@ vignette: >
 
 
 ## Introduction
-The outlier methods used in the *OutliersO3* package identify outliers in different ways.  The common key parameter is usually called `alpha` (`alpha.cutoff` for `adjOutlyingness`, `tolProb` for `DetectDeviatingCells`), although for some methods (`FastPCS`, `DetectDeviatingCells`, `covMcd`) it is input as `(1-alpha)`. *OutliersO3* uses `tol` arguments, short for tolerance level, to put all these on an equivalent footing.
+The outlier methods used in the *OutliersO3* package identify outliers in different ways.  The common key parameter is usually called `alpha` (`alpha.cutoff` for `adjOutlyingness`, `tolProb` for `DDC`), although for some methods (`FastPCS`, `DDC`, `covMcd`) it is input as `(1-alpha)`. *OutliersO3* uses `tol` arguments, short for tolerance level, to put all these on an equivalent footing.
 The alphas (or (1-alpha)'s) are not directly comparable and so they should be set individually when drawing O3 plots to compare results.  It is up to users to decide which value should be used for each method. 
 
 
@@ -34,7 +34,7 @@ O3p1$gO3
 ```
 Fig 1: An O3 plot displaying outliers found by any of the 6 methods using individually specified `tol` values.  No outlier was identified by all six methods for any combination of variables. 
 
-The constituency labelled X84 is the Berlin-Friedrichshain -etc one mentioned in the first vignette.  There are 4 variable combinations where it is identified as an outlier by five of the methods.  Inspecting the table of outlier cases by variable combinations and methods, `outsTable`, reveals that the `DetectDeviatingCells method` is the odd man out three times.  In fact, it does not really identify any outliers at all, as the 4 ascribed to it all come from the boxplot outlier identification rule that is used for methods which cannot identify outliers for single variables.
+The constituency labelled X84 is the Berlin-Friedrichshain -etc one mentioned in the first vignette.  There are 4 variable combinations where it is identified as an outlier by five of the methods.  Inspecting the table of outlier cases by variable combinations and methods, `outsTable`, reveals that the `DDC method` is the odd man out three times.  In fact, it does not really identify any outliers at all, as the 4 ascribed to it all come from the boxplot outlier identification rule that is used for methods which cannot identify outliers for single variables.
 
 It should not be surprising that the methods find different outliers, because they are all different and have different goals, although we might have expected that they all agree on the most extreme outliers.  Perhaps the main surprise is that the differences are so great---at least for this dataset.
 
@@ -60,7 +60,7 @@ outHD <- O3q1$outsTable %>% filter(Method=="HDo") %>% group_by(Combination) %>% 
 knitr::kable(outHD, row.names=FALSE)
 ```
 
-The problem clearly lies in the second attribute, MeanBigramFrequency, and not in the tolerance level set.  It was decided to ignore the one dimensional combinations by setting k1=2, and leave the tolerance level as it was.  Tightening the tolerance levels for the other two methods finding more than a few outliers (`FastPCS` and `DetectDeviatingCells`) and adding case names for labels led to Figure 2.
+The problem clearly lies in the second attribute, MeanBigramFrequency, and not in the tolerance level set.  It was decided to ignore the one dimensional combinations by setting k1=2, and leave the tolerance level as it was.  Tightening the tolerance levels for the other two methods finding more than a few outliers (`FastPCS` and `DDC`) and adding case names for labels led to Figure 2.
 
 ```{r fig.width=7, fig.height=8, fig.align='center'}
 O3r <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"), k1=2, tolHDo=0.01, tolPCS=0.0025, tolBAC=0.005, toladj=0.1, tolDDC=0.005, tolMCD=0.000001)
