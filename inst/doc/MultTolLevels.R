@@ -1,6 +1,7 @@
 ## ----fig.width=6, fig.height=4, fig.align='center'-----------------------
 library(OutliersO3)
-data(Election2005, package="mbgraphic")
+library(ggplot2)
+data(Election2005)
 data <- Election2005[, c(6, 10, 17, 28)]
 O3d <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"), tolHDo=0.05, tolPCS=0.5, tolBAC=0.95, toladj=0.25, tolDDC=0.01, tolMCD=0.5)
 O3d1 <- O3plotM(O3d)
@@ -29,5 +30,5 @@ O3r <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"), k1=2,
 O3r1 <- O3plotM(O3r, caseNames=etymology$Verb)
 O3r1$nOut
 library(gridExtra)
-grid.arrange(O3r1$gO3, O3r1$gpcp, ncol=1, heights=c(2,1))
+grid.arrange(O3r1$gO3 + theme(plot.margin = unit(c(0, 0, 1, 0), "cm")), O3r1$gpcp, ncol=1, heights=c(2,1))
 

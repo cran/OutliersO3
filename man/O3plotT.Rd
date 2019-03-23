@@ -32,6 +32,8 @@ A list of colours for O3 plots. If omitted, \code{\link{O3plotColours}} gives th
 This function takes the output from \code{\link{O3prep}} and draws an O3 plot with up to 3 different tolerance levels.  The default colours are khaki for the least strict tolerance level, yellow for the next, and red for the strictest.
 
 The two parallel coordinate plots, one using the raw data and one using outlier distances, are examples of what can be done to explore the results in more detail.  If you want these plots with other highlighting then you can use outsTable with either the dataset or the Ds array to draw them using \code{\link[GGally]{ggparcoord}} from \pkg{GGally} or whatever graphics tool you prefer.
+
+The plots produced are ggplot objects so that you can work with them—to some extent—directly.  In particular, plot margins can be set using  \code{+ theme(plot.margin = unit(c(t, r, b, l), ''cm''))}, which is useful when the cases are labelled with the caseNames option.
 }
 
 \value{
@@ -60,8 +62,6 @@ a three-dimensional array of tolerance levels by variable combinations by cases 
 Antony Unwin unwin@math.uni-augsburg.de
 }
 
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{\code{\link{O3plotColours}}, \code{\link[HDoutliers]{HDoutliers}} in \pkg{HDoutliers}, \code{\link[FastPCS]{FastPCS}} in \pkg{FastPCS}, \code{\link[robustX]{mvBACON}} in \pkg{robustX}, \code{\link[robustbase]{adjOutlyingness}} in \pkg{robustbase}, \code{\link[cellWise]{DDC}} in \pkg{cellWise}, \code{\link[robustbase]{covMcd}} in \pkg{robustbase}
 }

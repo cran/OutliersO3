@@ -7,7 +7,7 @@ library(GGally)
 ## ----fig.width=6, fig.height=4, fig.align='center'-----------------------
 # Prepare O3plot results
 library(OutliersO3)
-data(Election2005, package="mbgraphic")
+data(Election2005)
 data <- Election2005[, c(6, 10, 17, 28)]
 O3p <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"))
 O3p1 <- O3plotM(O3p)

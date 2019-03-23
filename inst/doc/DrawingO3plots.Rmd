@@ -23,11 +23,12 @@ Univariate outliers are cases identified as outliers based on one variable. Mult
 
 ```{r fig.width=7, fig.height=8, fig.align='center'}
 library(OutliersO3)
-data(Election2005, package="mbgraphic")
+library(ggplot2)
+data(Election2005)
 data <- Election2005[, c(6, 10, 17, 28)]
 O3s <- O3prep(data, method="HDo", tols=0.05, boxplotLimits=6)
 O3s1 <- O3plotT(O3s, caseNames=Election2005$Name)
-O3s1$gO3
+O3s1$gO3 + theme(plot.margin = unit(c(0, 0, 2, 0), "cm"))
 ```
 
 Fig 1: An O3 plot using the HDoutliers algorithm for a dataset comprising four structural variables for German parliamentary constituencies.

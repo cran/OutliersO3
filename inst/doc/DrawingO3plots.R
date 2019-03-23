@@ -1,10 +1,11 @@
 ## ----fig.width=7, fig.height=8, fig.align='center'-----------------------
 library(OutliersO3)
-data(Election2005, package="mbgraphic")
+library(ggplot2)
+data(Election2005)
 data <- Election2005[, c(6, 10, 17, 28)]
 O3s <- O3prep(data, method="HDo", tols=0.05, boxplotLimits=6)
 O3s1 <- O3plotT(O3s, caseNames=Election2005$Name)
-O3s1$gO3
+O3s1$gO3 + theme(plot.margin = unit(c(0, 0, 2, 0), "cm"))
 
 ## ----fig.width=7, fig.height=8, fig.align='center'-----------------------
 O3x <- O3prep(data, method="HDo", tols=c(0.1, 0.05, 0.01), boxplotLimits=c(3, 6, 10))

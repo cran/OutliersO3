@@ -1,3 +1,9 @@
+Outliers03 v0.6.2 (Release date: 2019-03-27)
+==============
+Reference added to JCGS article on O3 plots (in press).
+Dataset Election2005 included in package, so that \pkg{mbgraphic} is no longer suggested.
+Some small additions to help files.
+
 Outliers03 v0.6.1 (Release date: 2019-02-27)
 ==============
 The authors of the package cellWise have renamed their function DetectDeviatingCells DDC and this required a minor code change in OutliersO3 and amendments to help files.
