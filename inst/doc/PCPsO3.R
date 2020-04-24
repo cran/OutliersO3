@@ -1,10 +1,10 @@
-## ----include=FALSE-------------------------------------------------------
+## ----include=FALSE------------------------------------------------------------
 library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(GGally)
 
-## ----fig.width=6, fig.height=4, fig.align='center'-----------------------
+## ----fig.width=6, fig.height=4, fig.align='center'----------------------------
 # Prepare O3plot results
 library(OutliersO3)
 data(Election2005)
@@ -29,7 +29,7 @@ legend.position = "none", axis.ticks.y = element_blank(),
 axis.text.y = element_blank())
 gp
 
-## ----fig.width=6, fig.height=4, fig.align='center'-----------------------
+## ----fig.width=6, fig.height=4, fig.align='center'----------------------------
 mm <- c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD")
 #Create the dataset of distances and add the new highlighting variable from the first example
 Cx <- data.frame(O3p1$Cs[ , "c1111", ])

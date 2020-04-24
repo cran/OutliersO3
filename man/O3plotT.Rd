@@ -33,7 +33,7 @@ This function takes the output from \code{\link{O3prep}} and draws an O3 plot wi
 
 The two parallel coordinate plots, one using the raw data and one using outlier distances, are examples of what can be done to explore the results in more detail.  If you want these plots with other highlighting then you can use outsTable with either the dataset or the Ds array to draw them using \code{\link[GGally]{ggparcoord}} from \pkg{GGally} or whatever graphics tool you prefer.
 
-The plots produced are ggplot objects so that you can work with them—to some extent—directly.  In particular, plot margins can be set using  \code{+ theme(plot.margin = unit(c(t, r, b, l), ''cm''))}, which is useful when the cases are labelled with the caseNames option.
+The plots produced are ggplot objects so that you can work with them—to some extent—directly.  In particular, plot margins can be set using  \code{ + theme(plot.margin = unit(c(t, r, b, l), ''cm''))}, which is useful when the cases are labelled with the caseNames option and you need more space to the right of the plot.
 }
 
 \value{

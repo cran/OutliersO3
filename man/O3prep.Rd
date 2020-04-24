@@ -25,10 +25,10 @@ highest number of variables in a combination
 method(s) used for identifying outliers (up to six can be used)
 }
   \item{tols}{
-outlier tolerance level(s) when only one method is specified, up to three can be used.  For consistent use of the argument, it is transformed for some of the methods.  See details below of how the argument is applied for each approach.  
+outlier tolerance level(s) when only one method is specified.  Up to three can be used.  For consistent use of the argument, it is transformed for some of the methods.  See details below of how the argument is applied for each approach.  
 }
   \item{boxplotLimits}{
-up to three boxplot limits are used, matching the number of tolerance levels, if a method does not apply for a single variable.
+up to three boxplot limits are used (matching the number of tolerance levels), if a method does not apply for finding outliers for a single variable.
 }
   \item{tolHDo}{
 an individual outlier tolerance level for the HDoutliers method.  The default in \pkg{HDoutliers}, alpha, is 0.05.
@@ -56,7 +56,7 @@ To check outliers for all possible combinations of variables choose k1=1 and K=n
 
 The optional methods are "HDo" \command{HDoutliers} (from  \pkg{HDoutliers}), "PCS" \command{FastPCS} (\pkg{FastPCS}), "BAC" \command{mvBACON} (\pkg{robustX}), "adjOut" \command{adjOutlyingness} (\pkg{robustbase}), "DDC" \command{DDC} (\pkg{Cellwise}), "MCD" \command{covMcd} (\pkg{robustbase}).  References for all these methods can be found on their help pages, linked below.  (Note that \pkg{Cellwise} has renamed its function \command{DetectDeviatingCells}.  Since version 2.1.0 \command{DDC} is used instead.)
 
-If only one method is specified, then up to three tolerance levels (tols) and three boxplot limits (boxplotLimits) can be specified.
+If only one method is specified, then up to three tolerance levels (tols) and three boxplot limits (boxplotLimits) can be specified.  If more than one method is specified, then the individual tol* parameters are used.
 
 \code{tol} is the argument determining outlyingness and should be set low, as in \command{HDoutliers} and \command{mvBACON}, where it is called alpha, and in \command{covMcd}.  For the other methods \code{(1-tol)} is used.  In \command{DDC} the argument is called tolProb. Using the same tolerance level for all methods does not make them directly comparable, which is why it is recommended to set them individually when drawing a comparative O3 plot.  The defaults suggested on the methods' help pages mostly found too many outliers and so other defaults have been set.  Users need to decide for themselves, possibly dependent on the dataset they are analysing.
 

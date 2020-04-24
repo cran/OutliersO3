@@ -2,7 +2,6 @@
 \alias{Election2005}
 \docType{data}
 \title{ Election2005 data
-%%   ~~ data name/kind ... ~~
 }
 \description{
 A data set for the German 'Bundestag' election of 2005. It includes information about the elections

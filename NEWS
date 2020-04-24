@@ -1,3 +1,8 @@
+Outliers03 v0.6.3 (Release date: 2020-04-27)
+==============
+Changed how labels are drawn because "Vectorized input to `element_text()` is not officially supported" by ggplot2.
+Some small changes to help files on the tolerance parameters and on plot margins (thanks to Jan Greyling for suggesting this).
+
 Outliers03 v0.6.2 (Release date: 2019-03-27)
 ==============
 Reference added to JCGS article on O3 plots (in press).

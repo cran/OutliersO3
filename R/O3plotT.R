@@ -107,12 +107,13 @@ outList <- outResults$outList
     z1p <- z1p %>% mutate(s1B = factor(sB, levels = c("0", "0.001", "0.002", "3",
       "4", "5", "3.01", "3.02", "6.03", "7", "14", "21", "28", "35", "42")))
     names(outCols) <- levels(z1p$s1B)
-    vc <- c(rep("black", n1), rep("white", 2), rep("black", nz))
+    levels(z1p$psNx)[n1+1] <- " "
+    levels(z1p$psNx)[n1+2] <- "  "
 
     ga <- ggplot(z1p, aes(psNx, forcats::fct_rev(pID), group = s1B, fill = s1B)) +
       geom_tile(colour = "grey30") + labs(x = NULL, y = NULL) +
       theme(legend.position = "bottom", panel.background = element_rect(fill = "white"),
-      axis.text.x = element_text(size=coltxtsize, angle=45, hjust=0, vjust=0, colour=vc),
+      axis.text.x = element_text(size=coltxtsize, angle=45, hjust=0, vjust=0),
       axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
       scale_x_discrete(position = "top") +
       geom_hline(yintercept = tw, lty = 3, colour = "blue", size=0.75)

@@ -13,11 +13,11 @@ vignette: >
 
 
 ## Introduction
-Two parallel coordinate plots are drawn by the *OutliersO3* package to complement the main O3 plot, one of the dataset with all outliers highlighted and one of outlier distances with either all outliers highlighted (O3plotM) or the outliers found for the strictest tolerance level highlighted (O3plotT).  This vignette shows you how to draw these parallel coordinate plots with different sets of cases highlighted.
+Two parallel coordinate plots are drawn by the *OutliersO3* package to complement the main O3 plot, one of the dataset with all outliers highlighted and one of outlier distances with either all outliers highlighted (`O3plotM`) or the outliers found for the strictest tolerance level highlighted (`O3plotT`).  This vignette shows you how to draw these parallel coordinate plots with different sets of cases highlighted.
 
 
 ## Setting up variables for alternative highlighting
-Consider again the Election2005 dataset used in the other vignettes and create a new binary variable defining the cases you are interested in.  The first example selects the outliers identified for the complete dataset and then uses the code from the O3plotM function for drawing a pcp of the data.
+Consider again the Election2005 dataset used in the other vignettes and create a new binary variable defining the cases you are interested in.  The first example selects the outliers identified for the complete dataset and then uses the code from the `O3plotM` function for drawing a pcp of the data.
 
 ```{r include=FALSE}
 library(dplyr)
@@ -75,7 +75,7 @@ axis.text.y = element_blank())
 gMethods <- gc  + ggtitle(paste("Distances for each method with outliers highlighted"))
 gc
 ```
-Fig 2: A parallel coordinate plot of the outlier scores reported by the different methods (excluding HDoutliers, which does not calculate scores).  Cases identified as outliers for the full dataset are highlighted.  PCS and BAC give similar results.
+Fig 2: A parallel coordinate plot of the outlier scores reported by the different methods (excluding `HDoutliers`, which does not calculate scores).  Cases identified as outliers for the full dataset are highlighted.  `PCS` and `BAC` give similar results.
 
 Other highlighting variables might include highlighting for other combinations or highlighting for particular methods.  Or you might want to explore the data with other graphical tools.
 

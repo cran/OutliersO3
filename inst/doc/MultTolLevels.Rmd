@@ -68,7 +68,7 @@ O3r <- O3prep(data, method=c("HDo", "PCS", "BAC", "adjOut", "DDC", "MCD"), k1=2,
 O3r1 <- O3plotM(O3r, caseNames=etymology$Verb)
 O3r1$nOut
 library(gridExtra)
-grid.arrange(O3r1$gO3 + theme(plot.margin = unit(c(0, 0, 1, 0), "cm")), O3r1$gpcp, ncol=1, heights=c(2,1))
+grid.arrange(O3r1$gO3 + theme(plot.margin = unit(c(0, 1, 0, 0), "cm")), O3r1$gpcp, ncol=1, heights=c(2,1))
 ```
 
 Fig 2: An O3 plot of the etymology dataset for combinations to 2 to 6 variables.  There is little agreement amongst the methods and no agreement anywhere for all six methods together.  The parallel coordinate plot does suggest two pairs of potential outliers on single variables, but judging by the O3 plot they would not be identified as outliers in six dimensions.
